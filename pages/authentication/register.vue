@@ -71,6 +71,8 @@ const toast = useToast();
 import { message } from "~/utils/message";
 import { RegisterSchema } from "~/validation/userValidation";
 import { useUserStore } from "~/stores/user";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const user = useUserStore();
 const loading = ref(false);
 const form = ref({
@@ -133,6 +135,8 @@ async function submitForm() {
     message(toast, "Success", response.message);
 
     user.setUser(response.data);
+
+    router.push("/");
   } catch (err: any) {
     if (err.data.data?.fieldErrors) {
       Object.values(err.data.data?.fieldErrors).forEach((element) => {

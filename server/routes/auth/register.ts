@@ -35,11 +35,13 @@ export default defineEventHandler(async (event) => {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const user: any = UserModel.create({
+    const user: any = await UserModel.create({
         username,
         email,
         password: hashedPassword,
     })
+
+    console.log(user)
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
         expiresIn: '8h',

@@ -60,8 +60,12 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from "vue-router";
+const router = useRouter();
 import { LoginSchema } from "~/validation/userValidation";
-
+const toast = useToast();
+import { useUserStore } from "~/stores/user";
+const user = useUserStore();
 const form = ref({
   usernameOrEmail: "",
   password: "",
@@ -85,7 +89,7 @@ function validateForm() {
 
   if (!result.success) {
     const errorMap: Record<string, string> = {};
-    result.error.errors.forEach((e) => {
+    result.error.errors.forEach((e: any) => {
       if (e.path[0]) {
         errorMap[e.path[0]] = e.message;
       }
@@ -102,12 +106,37 @@ function validateForm() {
   };
 }
 
-function submitForm() {
+async function submitForm() {
   const { status, errors: validationErrors } = validateForm();
   errors.value = validationErrors;
   isSubmited.value = true;
   if (!status) {
     return;
+  }
+
+  try {
+    const response: any = await $fetch("/auth/login", {
+      server: false,
+      method: "POST",
+      body: { ...form.value },
+    });
+
+    if (response.statusCode != 200) return;
+
+    message(toast, "Success", response.message);
+
+    user.setUser(response.data);
+
+    router.push("/");
+  } catch (err: any) {
+    if (err.data.data?.fieldErrors) {
+      Object.values(err.data.data?.fieldErrors).forEach((element) => {
+        console.log(element);
+        message(toast, "Error", element[0]);
+      });
+    } else {
+      message(toast, "Error", err.statusMessage);
+    }
   }
 }
 </script>
