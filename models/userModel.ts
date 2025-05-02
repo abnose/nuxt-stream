@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import { Schema } from "mongoose";
+
 const userSchema = new mongoose.Schema(
     {
         username: {
@@ -16,7 +18,9 @@ const userSchema = new mongoose.Schema(
         img: {
             type: String,
             default: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-        }
+        },
+        channel: { type: Schema.Types.ObjectId, ref: "Channel" },
+        followedChannels: { type: [{ type: Schema.Types.ObjectId, ref: "Channel" }] },
     },
     { timestamps: true }
 );

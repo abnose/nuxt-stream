@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'
 import type { IUser } from '~/interfaces'
 
-export const useUserStore = defineStore('counter', {
+export const useUserStore = defineStore('user', {
     state: () => ({
         username: '',
         token: '',
