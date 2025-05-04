@@ -36,12 +36,7 @@
         </a>
       </template>
       <template #end>
-        <div class="flex items-center gap-2 cursor-pointer">
-          <InputText
-            placeholder="Search"
-            type="text"
-            class="w-[25em] sm:w-auto"
-          />
+        <div class="flex items-center gap-5 cursor-pointer">
           <Avatar
             @click="toggle"
             image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png"
@@ -104,3 +99,70 @@ const navItems = ref([
   },
 ]);
 </script>
+<style lang="scss">
+.day-night {
+  cursor: pointer;
+  // position: absolute;
+  right: 20px;
+  top: 20px;
+  opacity: 0.5;
+
+  input {
+    display: none;
+
+    & + div {
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      box-shadow: inset 8px -8px 0 0 var(--text-color);
+      transform: scale(1) rotate(-2deg);
+      transition: box-shadow 0.5s ease 0s, transform 0.4s ease 0.1s;
+
+      &:before {
+        content: "";
+        width: inherit;
+        height: inherit;
+        border-radius: inherit;
+        position: absolute;
+        left: 0;
+        top: 0;
+        transition: background-color 0.3s ease;
+      }
+
+      &:after {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin: -3px 0 0 -3px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        box-shadow: 0 -23px 0 var(--text-color), 0 23px 0 var(--text-color),
+          23px 0 0 var(--text-color), -23px 0 0 var(--text-color),
+          15px 15px 0 var(--text-color), -15px 15px 0 var(--text-color),
+          15px -15px 0 var(--text-color), -15px -15px 0 var(--text-color);
+        transform: scale(0);
+        transition: all 0.3s ease;
+      }
+    }
+
+    &:checked + div {
+      box-shadow: inset 20px -20px 0 0 var(--text-color);
+      transform: scale(0.5) rotate(0deg);
+      transition: transform 0.3s ease 0.1s, box-shadow 0.2s ease 0s;
+
+      &:before {
+        background: var(--text-color);
+        transition: background-color 0.3s ease 0.1s;
+      }
+
+      &:after {
+        transform: scale(1);
+        transition: transform 0.5s ease 0.15s;
+      }
+    }
+  }
+}
+</style>
