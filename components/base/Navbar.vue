@@ -1,9 +1,8 @@
 <template>
-  <div class="card">
+  <div class="">
     <Menubar :model="items">
       <template #start>
         <!-- Logo -->
-
         <Button
           icon="pi pi-bars"
           severity="primary"
@@ -24,8 +23,9 @@
           <span
             v-if="item.shortcut"
             class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1"
-            >{{ item.shortcut }}</span
           >
+            {{ item.shortcut }}
+          </span>
           <i
             v-if="hasSubmenu"
             :class="[
@@ -47,20 +47,47 @@
     </Menubar>
 
     <Popover ref="op">
-      <ul class="list-none p-0 m-0 flex flex-col gap-1">
-        <li
-          v-for="item in navItems"
-          :key="item.name"
-          class="flex items-center w-[15.5em] text-sm cursor-pointer"
-        >
-          <div
-            class="flex w-full justify-between items-center p-2 hover:bg-gray-100 rounded-xl"
+      <PanelMenu :model="navItems" class="w-full md:w-70">
+        <template #item="{ item }">
+          <a
+            v-if="!item.link"
+            v-ripple
+            :class="[
+              'flex items-center px-4 py-2 text-xs cursor-pointer group',
+            ]"
           >
-            <span class="font-medium">{{ item.name }}</span>
-            <i :class="`pi ${item.icon}`"></i>
-          </div>
-        </li>
-      </ul>
+            <span
+              :class="[item.icon, 'text-primary group-hover:text-inherit']"
+            />
+            <span :class="['ml-2']">{{ item.label }}</span>
+            <span
+              v-if="item.items?.length"
+              class="ml-auto pi pi-angle-down"
+              :value="item.badge"
+            />
+            <Badge v-if="item.badge" class="ml-auto" :value="item.badge" />
+          </a>
+          <NuxtLink
+            v-else
+            :to="item.link"
+            v-ripple
+            :class="[
+              'flex items-center px-4 py-2 text-xs cursor-pointer group',
+            ]"
+          >
+            <span
+              :class="[item.icon, 'text-primary group-hover:text-inherit']"
+            />
+            <span :class="['ml-2']">{{ item.label }}</span>
+            <span
+              v-if="item.items?.length"
+              class="ml-auto pi pi-angle-down"
+              :value="item.badge"
+            />
+            <Badge v-if="item.badge" class="ml-auto" :value="item.badge" />
+          </NuxtLink>
+        </template>
+      </PanelMenu>
     </Popover>
 
     <Drawer
@@ -76,29 +103,45 @@
 <script setup>
 import ChannelsList from "@/components/ChannelsList.vue";
 import { ref } from "vue";
-const visible = ref(false);
 
+const visible = ref(false);
 const op = ref();
+
 const toggle = (event) => {
   op.value.toggle(event);
 };
+
 const items = ref([
   {
     label: "Home",
     icon: "pi pi-home",
   },
 ]);
+
 const navItems = ref([
   {
-    name: "Dashboard",
-    icon: "pi-cog",
+    label: "Dashboard",
+    icon: "pi pi-cog",
+    items: [
+      {
+        label: "Edit Profile",
+        icon: "pi pi-user",
+        link: "/profile",
+      },
+      {
+        label: "Change Password",
+        icon: "pi pi-eye",
+        link: "/change-password",
+      },
+    ],
   },
   {
-    name: "Logout",
-    icon: "pi-sign-out",
+    label: "Logout",
+    icon: "pi pi-sign-out",
   },
 ]);
 </script>
+
 <style lang="scss">
 .day-night {
   cursor: pointer;

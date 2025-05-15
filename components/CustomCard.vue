@@ -1,126 +1,45 @@
 <template>
-  <div class="p-3">
-    <div class="rounded-2xl p-3">
-      <Carousel
-        :value="channels"
-        :numVisible="4"
-        :numScroll="1"
-        :responsiveOptions="responsiveOptions"
-        circular
-        :autoplayInterval="10000"
-        :showIndicators="false"
-      >
-        <template #item="slotProps">
-          <NuxtLink
-            :to="`/channel/${slotProps.data.id}`"
-            class="flex justify-center bg-gray-50/70 cursor-pointer rounded-2xl flex-col items-center m-2 p-4"
-          >
-            <div class="card">
-              <span class="icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M4.5 9.5V5.5C4.5 4.94772 4.94772 4.5 5.5 4.5H9.5C10.0523 4.5 10.5 4.94772 10.5 5.5V9.5C10.5 10.0523 10.0523 10.5 9.5 10.5H5.5C4.94772 10.5 4.5 10.0523 4.5 9.5Z"
-                  />
-                  <path
-                    d="M13.5 18.5V14.5C13.5 13.9477 13.9477 13.5 14.5 13.5H18.5C19.0523 13.5 19.5 13.9477 19.5 14.5V18.5C19.5 19.0523 19.0523 19.5 18.5 19.5H14.5C13.9477 19.5 13.5 19.0523 13.5 18.5Z"
-                  />
-                  <path d="M4.5 19.5L7.5 13.5L10.5 19.5H4.5Z" />
-                  <path
-                    d="M16.5 4.5C18.1569 4.5 19.5 5.84315 19.5 7.5C19.5 9.15685 18.1569 10.5 16.5 10.5C14.8431 10.5 13.5 9.15685 13.5 7.5C13.5 5.84315 14.8431 4.5 16.5 4.5Z"
-                  />
-                </svg>
-              </span>
-              <h4>Categories</h4>
-              <p>
-                Standard chunk of Lorem Ipsum used since the 1500s is showed
-                below for those interested.
-              </p>
-              <div class="shine"></div>
-              <div class="background">
-                <div class="tiles">
-                  <div class="tile tile-1"></div>
-                  <div class="tile tile-2"></div>
-                  <div class="tile tile-3"></div>
-                  <div class="tile tile-4"></div>
+  <div
+    :class="`customCard w-[${width}] relative flex flex-col justify-center items-center`"
+  >
+    <div class="flex justify-between px-5 w-full absolute top-0 left-[-70px]">
+      <h4 style="">{{ header }}</h4>
+    </div>
+    <slot></slot>
+    <div class="shine"></div>
+    <div class="background">
+      <div class="tiles">
+        <div class="tile tile-1"></div>
+        <div class="tile tile-2"></div>
+        <div class="tile tile-3"></div>
+        <div class="tile tile-4"></div>
 
-                  <div class="tile tile-5"></div>
-                  <div class="tile tile-6"></div>
-                  <div class="tile tile-7"></div>
-                  <div class="tile tile-8"></div>
+        <div class="tile tile-5"></div>
+        <div class="tile tile-6"></div>
+        <div class="tile tile-7"></div>
+        <div class="tile tile-8"></div>
 
-                  <div class="tile tile-9"></div>
-                  <div class="tile tile-10"></div>
-                </div>
+        <div class="tile tile-9"></div>
+        <div class="tile tile-10"></div>
+      </div>
 
-                <div class="line line-1"></div>
-                <div class="line line-2"></div>
-                <div class="line line-3"></div>
-              </div>
-            </div>
-          </NuxtLink>
-        </template>
-      </Carousel>
+      <div class="line line-1"></div>
+      <div class="line line-2"></div>
+      <div class="line line-3"></div>
     </div>
   </div>
 </template>
 
-<script setup>
-const channels = ref([
-  { image: "", name: "test", id: 1 },
-  { image: "", name: "test", id: 2 },
-  { image: "", name: "test", id: 3 },
-  { image: "", name: "test", id: 4 },
-  { image: "", name: "test", id: 5 },
-]);
-const responsiveOptions = ref([
-  {
-    breakpoint: "1400px",
-    numVisible: 2,
-    numScroll: 1,
-  },
-  {
-    breakpoint: "1199px",
-    numVisible: 3,
-    numScroll: 1,
-  },
-  {
-    breakpoint: "767px",
-    numVisible: 2,
-    numScroll: 1,
-  },
-  {
-    breakpoint: "575px",
-    numVisible: 1,
-    numScroll: 1,
-  },
-]);
-
-const getSeverity = (status) => {
-  switch (status) {
-    case "INSTOCK":
-      return "success";
-
-    case "LOWSTOCK":
-      return "warn";
-
-    case "OUTOFSTOCK":
-      return "danger";
-
-    default:
-      return null;
-  }
-};
+<script setup lang="ts">
+const props = defineProps<{
+  header: string;
+  icon?: string;
+  width?: string;
+}>();
 </script>
-<style lang="scss">
-.card {
+
+<style lang="scss" scoped>
+.customCard {
   background-color: var(--background-color);
   box-shadow: 0px var(--card-box-shadow-1-y) var(--card-box-shadow-1-blur)
       var(--card-box-shadow-1),
@@ -141,53 +60,16 @@ const getSeverity = (status) => {
     background-color: var(--card-background-color);
   }
 
-  .icon {
-    z-index: 2;
-    position: relative;
-    display: table;
-    padding: 8px;
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 4.5px;
-      border-radius: 50%;
-      background-color: var(--card-icon-background-color);
-      border: 1px solid var(--card-icon-border-color);
-      backdrop-filter: blur(2px);
-      transition: background-color 0.25s, border-color 0.25s;
-    }
-
-    svg {
-      position: relative;
-      z-index: 1;
-      display: block;
-      width: 24px;
-      height: 24px;
-      transform: translateZ(0);
-      color: var(--card-icon-color);
-      transition: color 0.25s;
-    }
-  }
-
   h4 {
+    writing-mode: sideways-rl;
     z-index: 2;
     position: relative;
     margin: 12px 0 4px 0;
     font-family: inherit;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 24px;
     line-height: 2;
     color: var(--card-label-color);
-  }
-
-  p {
-    z-index: 2;
-    position: relative;
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--text-color);
   }
 
   .shine {
