@@ -36,12 +36,9 @@
         </a>
       </template>
       <template #end>
-        <div class="flex items-center gap-5 cursor-pointer">
-          <Avatar
-            @click="toggle"
-            image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png"
-            shape="circle"
-          />
+        <div class="flex items-center gap-2 cursor-pointer">
+          <p class="text-xs">{{ user.username }}</p>
+          <Avatar @click="toggle" :image="user.imgUrl" shape="circle" />
         </div>
       </template>
     </Menubar>
@@ -101,6 +98,9 @@
 </template>
 
 <script setup>
+import { useUserStore } from "~/stores/user";
+const user = useUserStore();
+
 import ChannelsList from "@/components/ChannelsList.vue";
 import { ref } from "vue";
 

@@ -61,7 +61,7 @@
             name="image"
             class="flex w-full flex-col gap-1"
           >
-            <div class="card flex justify-between w-full items-center gap-6">
+            <div class="flex justify-between w-full items-center gap-6">
               <FileUpload
                 mode="basic"
                 @select="onFileSelect"
@@ -120,6 +120,8 @@ import { reactive, ref } from "vue";
 import { zodResolver } from "@primevue/forms/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "primevue/usetoast";
+import { useUserStore } from "~/stores/user";
+const user = useUserStore();
 
 const toast = useToast();
 const src = ref(null);
@@ -159,11 +161,53 @@ function onFileSelect(event) {
   }
 }
 
-// ✅ Handle form submission
-const onFormSubmit = ({ valid, values }) => {
-  if (valid) {
+const onFormSubmit = async ({ valid, values }) => {
+  if (!valid) return;
+
+  const formData = new FormData();
+  formData.append("username", values.username);
+  formData.append("title", values.title);
+  formData.append("description", values.description);
+  console.log(values);
+  if (initialValues.image instanceof File) {
+    formData.append("image", initialValues.image);
+  }
+
+  console.log(initialValues.image);
+
+  try {
+    const res = await $fetch("/profile/editProfile", {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+
     message(toast, "Success", "Form submitted successfully.");
-    console.log("Form Values:", values);
+  } catch (err) {
+    console.log(err);
+    if (err?.data?.data?.fieldErrors) {
+      // Zod error format
+      const fieldErrors = err.data.data.fieldErrors;
+      Object.values(fieldErrors).forEach((messages) => {
+        if (Array.isArray(messages) && messages.length > 0) {
+          message(toast, "Error", messages[0]);
+        }
+      });
+    } else if (err?.data?.message) {
+      // Custom error message from backend
+      message(toast, "Error", err.data.message);
+    } else {
+      // Fallback error
+      message(
+        toast,
+        "Error",
+        "Something went wrong while submitting the form."
+      );
+      console.error("Submission error:", err);
+    }
   }
 };
 </script>

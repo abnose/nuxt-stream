@@ -59,6 +59,7 @@ export default defineEventHandler(async (event) => {
             email: user.email || '',
             username: user.username,
             id: user._id,
+            img: user.img,
         },
     }
 })

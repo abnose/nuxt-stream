@@ -7,12 +7,14 @@ export const useUserStore = defineStore('user', {
         username: '',
         token: '',
         email: '',
+        imgUrl: ''
     }),
     actions: {
         setUser(payload: any) {
             this.token = payload.token;
             this.username = payload.username;
             this.email = payload.email;
+            this.imgUrl = payload.img;
         },
     },
     persist: true, // This enables localStorage persistence

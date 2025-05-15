@@ -24,6 +24,7 @@
     "@unhead/vue": "^2.0.8",
     "bcrypt": "^5.1.1",
     "eslint": "^9.25.1",
+    "formidable": "^3.5.4",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.1",
     "nuxt": "^3.17.1",
