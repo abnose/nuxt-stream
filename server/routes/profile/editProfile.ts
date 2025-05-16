@@ -4,6 +4,7 @@ import UserModel from '~/models/userModel'
 import { z } from 'zod'
 import { handleUpload } from '~/server/utils/uploadHelper'
 import { parseFormData } from '~/server/utils/parseFormData'
+import { tokenCheck } from '~/server/utils/tokenCheck'
 
 const schema = z.object({
     username: z.string().min(1, 'Username is required'),
@@ -12,15 +13,7 @@ const schema = z.object({
 })
 
 export default defineEventHandler(async (event: H3Event) => {
-    // 🔐 Check auth header
-    const token = getHeader(event, 'authorization')?.replace('Bearer ', '')
-    if (!token) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
-
-    // 🔑 Decode JWT
-    const decoded = jwt.verify(token, process.env.JWT_SECRET) as { userId?: string }
-    if (!decoded?.userId) throw createError({ statusCode: 401, statusMessage: 'Invalid token' })
-
-    const userId = decoded.userId
+    const userId = tokenCheck(event)
 
     // 📩 Parse form
     const { fields, files } = await parseFormData(event)
@@ -29,8 +22,6 @@ export default defineEventHandler(async (event: H3Event) => {
     const flatFields = Object.fromEntries(
         Object.entries(fields).map(([key, value]) => [key, Array.isArray(value) ? value[0] : value])
     )
-
-    console.log(flatFields)
 
     // ✅ Validate inputs
     const result = schema.safeParse(flatFields)

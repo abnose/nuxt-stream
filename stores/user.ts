@@ -11,11 +11,13 @@ export const useUserStore = defineStore('user', {
     }),
     actions: {
         setUser(payload: any) {
-            this.token = payload.token;
             this.username = payload.username;
             this.email = payload.email;
             this.imgUrl = payload.img;
         },
+        setToken(payload: any) {
+            this.token = payload.token;
+        }
     },
     persist: true, // This enables localStorage persistence
 })

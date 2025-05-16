@@ -185,7 +185,9 @@ const onFormSubmit = async ({ valid, values }) => {
       },
     });
 
-    message(toast, "Success", "Form submitted successfully.");
+    message(toast, "Success", "Profile Edited successfully.");
+    console.log(res);
+    user.setUser(res.user);
   } catch (err) {
     console.log(err);
     if (err?.data?.data?.fieldErrors) {

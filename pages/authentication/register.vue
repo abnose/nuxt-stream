@@ -135,6 +135,7 @@ async function submitForm() {
     message(toast, "Success", response.message);
 
     user.setUser(response.data);
+    user.setToken(response.data);
 
     router.push("/");
   } catch (err: any) {
