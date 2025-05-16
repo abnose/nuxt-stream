@@ -36,14 +36,14 @@
         </a>
       </template>
       <template #end>
-        <div class="flex items-center gap-2 cursor-pointer">
+        <div v-if="user.token" class="flex items-center gap-2 cursor-pointer">
           <p class="text-xs">{{ user.username }}</p>
           <Avatar @click="toggle" :image="user.imgUrl" shape="circle" />
         </div>
       </template>
     </Menubar>
 
-    <Popover ref="op">
+    <Popover ref="op" v-if="user.token">
       <PanelMenu :model="navItems" class="w-full md:w-70">
         <template #item="{ item }">
           <a
@@ -100,7 +100,11 @@
 <script setup>
 import { useUserStore } from "~/stores/user";
 const user = useUserStore();
+import { useRouter } from "vue-router";
+import { useToast } from "primevue/usetoast";
+const toast = useToast();
 
+const router = useRouter();
 import ChannelsList from "@/components/ChannelsList.vue";
 import { ref } from "vue";
 
@@ -126,18 +130,42 @@ const navItems = ref([
       {
         label: "Edit Profile",
         icon: "pi pi-user",
-        link: "/profile",
+        link: "/profile/edit",
       },
       {
         label: "Change Password",
         icon: "pi pi-eye",
-        link: "/change-password",
+        link: "/profile/password",
       },
     ],
   },
   {
     label: "Logout",
     icon: "pi pi-sign-out",
+    command: async () => {
+      try {
+        const res = await $fetch("/profile/logout", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+
+        if (res.success) {
+          user.logout();
+          message(toast, "Success", res.message || "Logout successfully.");
+          router.push("/authentication/login");
+        }
+      } catch (err) {
+        console.log(err);
+        if (err?.data?.message) {
+          message(toast, "Error", err.data.message);
+        } else {
+          message(toast, "Error", "Something went wrong.");
+        }
+      }
+    },
   },
 ]);
 </script>

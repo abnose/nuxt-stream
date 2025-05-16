@@ -212,4 +212,9 @@ const onFormSubmit = async ({ valid, values }) => {
     }
   }
 };
+
+onMounted(async () => {
+  const isValid = await useCheckAuth();
+  if (!isValid) return;
+});
 </script>

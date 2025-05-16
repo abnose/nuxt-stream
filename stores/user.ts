@@ -17,6 +17,12 @@ export const useUserStore = defineStore('user', {
         },
         setToken(payload: any) {
             this.token = payload.token;
+        },
+        logout() {
+            this.username = '';
+            this.token = '';
+            this.email = '';
+            this.imgUrl = '';
         }
     },
     persist: true, // This enables localStorage persistence
