@@ -176,7 +176,7 @@ const onFormSubmit = async ({ valid, values }) => {
   console.log(initialValues.image);
 
   try {
-    const res = await $fetch("/channel/channelsettings", {
+    const res = await $fetch("/channel/channel-settings", {
       method: "POST",
       body: formData,
       credentials: "include",

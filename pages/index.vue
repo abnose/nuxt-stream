@@ -1,8 +1,15 @@
 <template>
   <div class="p-3">
+    <div v-if="loading" class="text-center p-6">
+      <span class="loader" />
+    </div>
+
+    <div v-else-if="error" class="text-red-500 text-center p-6">
+      Failed to load channels.
+    </div>
     <div class="rounded-2xl p-3">
       <Carousel
-        :value="channels"
+        :value="data?.channels"
         :numVisible="4"
         :numScroll="1"
         :responsiveOptions="responsiveOptions"
@@ -15,7 +22,20 @@
             :to="`/channel/${slotProps.data.id}`"
             class="flex justify-center bg-gray-50/70 cursor-pointer rounded-2xl flex-col items-center m-2 p-4"
           >
-            <div class="card">
+            <div
+              class="card min-w-[400px] overflow-hidden"
+              :style="{
+                backgroundImage: `linear-gradient(rgba(255,255,255,0.4), rgba(255,255,255,0.9)), url(${slotProps.data.avatarUrl})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }"
+            >
+              <!-- <img
+                class="absolute top-0 left-0 opacity-50"
+                :src="slotProps.data.avatarUrl"
+                alt="Avatar"
+                width="400"
+              /> -->
               <span class="icon">
                 <svg
                   viewBox="0 0 24 24"
@@ -38,11 +58,8 @@
                   />
                 </svg>
               </span>
-              <h4>Categories</h4>
-              <p>
-                Standard chunk of Lorem Ipsum used since the 1500s is showed
-                below for those interested.
-              </p>
+              <h4>{{ slotProps.data.title }}</h4>
+              <p>{{ slotProps.data.description }}</p>
               <div class="shine"></div>
               <div class="background">
                 <div class="tiles">
@@ -73,13 +90,6 @@
 </template>
 
 <script setup>
-const channels = ref([
-  { image: "", name: "test", id: 1 },
-  { image: "", name: "test", id: 2 },
-  { image: "", name: "test", id: 3 },
-  { image: "", name: "test", id: 4 },
-  { image: "", name: "test", id: 5 },
-]);
 const responsiveOptions = ref([
   {
     breakpoint: "1400px",
@@ -103,23 +113,23 @@ const responsiveOptions = ref([
   },
 ]);
 
-const getSeverity = (status) => {
-  switch (status) {
-    case "INSTOCK":
-      return "success";
+const {
+  data,
+  error,
+  pending: loading,
+} = useFetch("/channel/get-channels", {
+  method: "GET",
+});
 
-    case "LOWSTOCK":
-      return "warn";
-
-    case "OUTOFSTOCK":
-      return "danger";
-
-    default:
-      return null;
-  }
-};
+console.log(error.value, data.value, loading.value);
 </script>
 <style lang="scss">
+.card {
+  aspect-ratio: 4 / 3; /* Example ratio */
+}
+.card {
+  height: 250px; /* adjust as needed */
+}
 .card {
   background-color: var(--background-color);
   box-shadow: 0px var(--card-box-shadow-1-y) var(--card-box-shadow-1-blur)
