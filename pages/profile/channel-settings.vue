@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-screen p-5 flex items-center justify-center mt-[-3em]">
-    <CustomCard :header="'Edit Profile'" :icon="'pi pi-user'" width="auto">
+    <CustomCard :header="'Channel Settings'" :icon="'pi pi-user'" width="auto">
       <div class="flex justify-center z-10 mt-[-2em] p-7">
         <Form
           :initialValues="initialValues"
@@ -176,7 +176,7 @@ const onFormSubmit = async ({ valid, values }) => {
   console.log(initialValues.image);
 
   try {
-    const res = await $fetch("/profile/editProfile", {
+    const res = await $fetch("/channel/channelsettings", {
       method: "POST",
       body: formData,
       credentials: "include",
@@ -185,7 +185,7 @@ const onFormSubmit = async ({ valid, values }) => {
       },
     });
 
-    message(toast, "Success", "Profile Edited successfully.");
+    message(toast, "Success", "Channel Edited Successfully.");
     console.log(res);
     user.setUser(res.user);
   } catch (err) {

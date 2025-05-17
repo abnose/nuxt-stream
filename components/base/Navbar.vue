@@ -128,13 +128,13 @@ const navItems = ref([
     icon: "pi pi-cog",
     items: [
       {
-        label: "Edit Profile",
-        icon: "pi pi-user",
-        link: "/profile/edit",
+        label: "Channel Settings",
+        icon: "pi pi-desktop",
+        link: "/profile/channel-settings",
       },
       {
         label: "Change Password",
-        icon: "pi pi-eye",
+        icon: "pi pi-key",
         link: "/profile/password",
       },
     ],

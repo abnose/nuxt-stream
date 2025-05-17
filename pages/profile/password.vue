@@ -17,7 +17,7 @@
           <FormField
             v-slot="$field"
             name="currentPassword"
-            class="flex flex-col gap-1 w-63"
+            class="flex flex-col gap-1"
           >
             <Password
               v-bind="$field"
@@ -40,7 +40,7 @@
           <FormField
             v-slot="$field"
             name="newPassword"
-            class="flex flex-col gap-1 w-63"
+            class="flex flex-col gap-1"
           >
             <Password v-bind="$field" placeholder="New Password" toggleMask />
             <Message
@@ -57,7 +57,7 @@
           <FormField
             v-slot="$field"
             name="confirmPassword"
-            class="flex flex-col gap-1 w-63"
+            class="flex flex-col gap-1"
           >
             <Password
               v-bind="$field"
