@@ -14,16 +14,20 @@
       <!-- Stream Info -->
       <div class="bg-white/50 rounded-xl shadow p-4 flex flex-col gap-2">
         <h2 class="text-xl font-bold text-gray-800">
-          {{ channelDetail.title }}
+          {{ channelDetail?.channel?.title }}
         </h2>
-        <p class="text-sm text-gray-600">{{ channelDetail.description }}</p>
+        <p class="text-sm text-gray-600">
+          {{ channelDetail?.channel?.description }}
+        </p>
         <div class="flex items-center gap-2 mt-2">
           <div
             class="w-3 h-3 rounded-full"
-            :class="channelDetail.isOnline ? 'bg-green-500' : 'bg-gray-400'"
+            :class="
+              channelDetail?.channel?.isOnline ? 'bg-green-500' : 'bg-gray-400'
+            "
           ></div>
           <span class="text-sm text-sky-700 font-medium">{{
-            channelDetail.username
+            channelDetail?.channel?.username
           }}</span>
         </div>
       </div>
@@ -41,13 +45,13 @@
 </template>
 
 <script setup>
-const channelDetail = {
-  id: 1,
-  title: "Gaming Channel",
-  description: "This is a gaming channel",
-  username: "Gamer",
-  isOnline: false,
-};
+const route = useRoute();
+const { channelId } = route.params;
+const {
+  data: channelDetail,
+  error,
+  pending: loading,
+} = await useFetch(`/channel/detail/${channelId}`);
 </script>
 <style lang="scss" scoped>
 .content {

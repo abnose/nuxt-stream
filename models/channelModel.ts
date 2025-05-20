@@ -8,6 +8,11 @@ const defaultDescription = "This is new channel description";
 
 const channelSchema = new mongoose.Schema(
   {
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "users",
+      required: true,
+    },
     isActive: { type: Boolean, default: false },
     title: { type: String, default: defaultTitle },
     description: { type: String, default: defaultDescription },
