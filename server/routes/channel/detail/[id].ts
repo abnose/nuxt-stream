@@ -1,8 +1,20 @@
 import { defineEventHandler, getRouterParam, createError } from "h3";
 import ChannelModel from "~/models/channelModel";
+import UserModel from "~/models/userModel";
+import { tokenCheck } from "~/server/utils/tokenCheck";
 
 export default defineEventHandler(async (event) => {
   try {
+    let userId = null;
+
+    // Optional: Extract token if available
+    try {
+      userId = tokenCheck(event);
+    } catch (err) {
+      console.log(err)
+      userId = null;
+    }
+
     const id = getRouterParam(event, "id");
     if (!id) {
       throw createError({
@@ -11,16 +23,28 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    // Populate owner field to get user info
     const channel = await ChannelModel.findById(id)
       .select("-__v")
-      .populate("owner", "username"); // only get username of owner
+      .populate("owner", "username");
 
     if (!channel) {
       throw createError({
         statusCode: 404,
         statusMessage: "Channel not found",
       });
+    }
+
+    let isFollowed = false;
+    console.log(userId, 'dalala')
+    if (userId) {
+      const user = await UserModel.findById(userId).select("followedChannels");
+      isFollowed = user?.followedChannels?.some(
+        (chId) => {
+          console.log(chId)
+          console.log(id)
+          return chId.toString() == id
+        }
+      );
     }
 
     return {
@@ -31,6 +55,8 @@ export default defineEventHandler(async (event) => {
         title: channel.title,
         description: channel.description,
         avatarUrl: channel.avatarUrl,
+        isOnline: channel.isOnline || false,
+        isFollowed,
       },
     };
   } catch (error) {

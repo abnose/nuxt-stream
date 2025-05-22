@@ -10,6 +10,7 @@
           rounded
           raised
           @click="visible = true"
+          v-if="user.token"
         />
       </template>
       <template #item="{ item, props, hasSubmenu, root }">
